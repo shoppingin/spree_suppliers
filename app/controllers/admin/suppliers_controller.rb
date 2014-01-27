@@ -1,5 +1,4 @@
-class SuppliersController < Spree::Admin::BaseController
-  resource_controller
+class Spre::Admin::SuppliersController < Spree::Admin::ResourceController
   respond_to :html, :js
 
   def index
