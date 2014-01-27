@@ -51,7 +51,7 @@ module SpreeSuppliers
 
           @orders = Spree::Order.ransack(params[:search]).result.includes([:user, :shipments, :payments]).page(params[:page]).per(Spree::Config[:orders_per_page])
 
-          if current_user.has_role?("vendor")
+          if current_spree_user.has_role?("vendor")
             @orders.select! {|o| o.spree_supplier_invoices.select {|s| s.supplier_id == current_user.supplier.id}.size > 0}
           end
           respond_with(@orders)
