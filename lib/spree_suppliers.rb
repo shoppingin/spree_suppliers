@@ -29,27 +29,27 @@ module SpreeSuppliers
         end
 
         def index
-          params[:search] ||= {}
-          params[:search][:completed_at_not_null] ||= '1' if Spree::Config[:show_only_complete_orders_by_default]
-          @show_only_completed = params[:search][:completed_at_not_null].present?
-          params[:search][:meta_sort] ||= @show_only_completed ? 'completed_at.desc' : 'created_at.desc'
+          params[:q] ||= {}
+          params[:q][:completed_at_not_null] ||= '1' if Spree::Config[:show_only_complete_orders_by_default]
+          @show_only_completed = params[:q][:completed_at_not_null].present?
+          params[:q][:meta_sort] ||= @show_only_completed ? 'completed_at.desc' : 'created_at.desc'
 
-          @search = Spree::Order.ransack(params[:search])
+          @search = Spree::Order.ransack(params[:q])
 
-          if !params[:search][:created_at_gt].blank?
-            params[:search][:created_at_gt] = Time.zone.parse(params[:search][:created_at_gt]).beginning_of_day rescue ""
+          if !params[:q][:created_at_gt].blank?
+            params[:q][:created_at_gt] = Time.zone.parse(params[:q][:created_at_gt]).beginning_of_day rescue ""
           end
 
-          if !params[:search][:created_at_lt].blank?
-            params[:search][:created_at_lt] = Time.zone.parse(params[:search][:created_at_lt]).end_of_day rescue ""
+          if !params[:q][:created_at_lt].blank?
+            params[:q][:created_at_lt] = Time.zone.parse(params[:q][:created_at_lt]).end_of_day rescue ""
           end
 
           if @show_only_completed
-            params[:search][:completed_at_gt] = params[:search].delete(:created_at_gt)
-            params[:search][:completed_at_lt] = params[:search].delete(:created_at_lt)
+            params[:q][:completed_at_gt] = params[:q].delete(:created_at_gt)
+            params[:q][:completed_at_lt] = params[:q].delete(:created_at_lt)
           end
 
-          @orders = Spree::Order.ransack(params[:search]).result.includes([:user, :shipments, :payments]).page(params[:page]).per(Spree::Config[:orders_per_page])
+          @orders = Spree::Order.ransack(params[:q]).result.includes([:user, :shipments, :payments]).page(params[:page]).per(Spree::Config[:orders_per_page])
 
           if current_spree_user.has_spree_role?("vendor")
             @orders.select! {|o| o.spree_supplier_invoices.select {|s| s.supplier_id == current_spree_user.supplier.id}.size > 0}
