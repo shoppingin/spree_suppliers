@@ -34,7 +34,7 @@ module SpreeSuppliers
           @show_only_completed = params[:search][:completed_at_is_not_null].present?
           params[:search][:meta_sort] ||= @show_only_completed ? 'completed_at.desc' : 'created_at.desc'
 
-          @search = Spree::Order.metasearch(params[:search])
+          @search = Spree::Order.ransack(params[:search])
 
           if !params[:search][:created_at_greater_than].blank?
             params[:search][:created_at_greater_than] = Time.zone.parse(params[:search][:created_at_greater_than]).beginning_of_day rescue ""
