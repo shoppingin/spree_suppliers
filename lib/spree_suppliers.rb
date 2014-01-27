@@ -6,15 +6,15 @@ module SpreeSuppliers
     config.autoload_paths += %W(#{config.root}/lib)
     def self.activate
 
-      LineItem.class_eval do
+      Spree::LineItem.class_eval do
         has_many :invoice_items
       end
 
-      Image.class_eval do
+      Spree::Image.class_eval do
         belongs_to :supplier
       end
 
-      Admin::OrdersController.class_eval do
+      Spree::Admin::OrdersController.class_eval do
         def show
           load_order
           # optional fee that admin can charge to sell suppliers products for them
@@ -58,7 +58,7 @@ module SpreeSuppliers
         end
       end
 
-      Order.class_eval do
+      Spree::Order.class_eval do
         has_many :supplier_invoices
         def generate_invoices(order)
           @order = order
@@ -104,7 +104,7 @@ module SpreeSuppliers
       end
 
 
-      Admin::ProductsController.class_eval do
+      Spree::Admin::ProductsController.class_eval do
         before_filter :load
         before_filter :load_index, :only => [:index]
         before_filter :edit_before, :only => [:edit]
@@ -173,15 +173,15 @@ module SpreeSuppliers
         end
       end
 
-      Product.class_eval do
+      Spree::Product.class_eval do
         belongs_to :supplier
       end
 
-      Taxon.class_eval do
+      Spree::Taxon.class_eval do
         has_and_belongs_to_many :suppliers
       end
 
-      User.class_eval do
+      Spree::User.class_eval do
         has_one :supplier
       end
 
