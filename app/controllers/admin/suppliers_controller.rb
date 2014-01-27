@@ -1,4 +1,4 @@
-class SpreeAdmin::Spree::SuppliersController < Spreei::Admin::BaseController
+class Spree::Admin::Spree::SuppliersController < Spree::Admin::BaseController
   resource_controller
   respond_to :html, :js
 
@@ -11,7 +11,7 @@ class SpreeAdmin::Spree::SuppliersController < Spreei::Admin::BaseController
   end
 
   def new
-    @supplier = Spree::Spree::Supplier.new()
+    @supplier = Spree::Supplier.new()
     @supplier.images.build
     @status = true
   end
