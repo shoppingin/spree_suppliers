@@ -20,10 +20,10 @@ module SpreeSuppliers
           # optional fee that admin can charge to sell suppliers products for them
           @fee = 0.10
           if current_user.has_role?("vendor")
-            @invoices = @order.supplier_invoices
+            @invoices = @order.spree_supplier_invoices
             @invoices.select! {|s| s.supplier_id == current_user.supplier.id}
           else
-            @invoices = @order.supplier_invoices
+            @invoices = @order.spree_supplier_invoices
           end
           respond_with(@order)
         end
@@ -52,14 +52,14 @@ module SpreeSuppliers
           @orders = Order.metasearch(params[:search]).includes([:user, :shipments, :payments]).page(params[:page]).per(Spree::Config[:orders_per_page])
 
           if current_user.has_role?("vendor")
-            @orders.select! {|o| o.supplier_invoices.select {|s| s.supplier_id == current_user.supplier.id}.size > 0}
+            @orders.select! {|o| o.spree_supplier_invoices.select {|s| s.supplier_id == current_user.supplier.id}.size > 0}
           end
           respond_with(@orders)
         end
       end
 
       Spree::Order.class_eval do
-        has_many :supplier_invoices
+        has_many :spree_supplier_invoices
         def generate_invoices(order)
           @order = order
           @order_products = @order.line_items
