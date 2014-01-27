@@ -1,23 +1,23 @@
-class Admin::SuppliersController < Admin::BaseController
+class SpreeAdmin::Spree::SuppliersController < Spreei::Admin::BaseController
   resource_controller
   respond_to :html, :js
 
   def index
-    if current_user.has_role?("admin")
-      @suppliers = Supplier.all
+    if current_spree_user.has_spree_role?("admin")
+      @suppliers = Spree::Supplier.all
     else
-      @supplier = current_user.supplier
+      @supplier = current_spree_user.supplier
     end
   end
 
   def new
-    @supplier = Supplier.new()
+    @supplier = Spree::Spree::Supplier.new()
     @supplier.images.build
     @status = true
   end
 
   def create
-    @supplier = Supplier.new(params[:supplier])
+    @supplier = Spree::Supplier.new(params[:supplier])
     if @supplier.save
       redirect_to admin_suppliers_path, :notice => "New supplier created"
     else
@@ -26,18 +26,18 @@ class Admin::SuppliersController < Admin::BaseController
   end
 
   def show
-    @supplier = Supplier.find(params[:id])
+    @supplier = Spree::Supplier.find(params[:id])
   end
 
   def edit
-    @supplier = Supplier.find(params[:id])
+    @supplier = Spree::Supplier.find(params[:id])
     @supplier.images.build
   end
 
   def destroy
-    @supplier = Supplier.find(params[:id])
+    @supplier = Spree::Supplier.find(params[:id])
     @supplier.destroy
-    flash[:notice] = "Supplier Successfully deleted."
+    flash[:notice] = "Spree::Supplier Successfully deleted."
     respond_with(@product) do |format|
       format.html { redirect_to collection_url }
       format.js do
@@ -49,17 +49,17 @@ class Admin::SuppliersController < Admin::BaseController
   end
 
   def update
-    @supplier = Supplier.find(params[:id])
+    @supplier = Spree::Supplier.find(params[:id])
     @status = false
     if @supplier.update_attributes(params[:supplier])
-      redirect_to edit_admin_supplier_path, :notice => "Supplier updated"
+      redirect_to edit_admin_supplier_path, :notice => "Spree::Supplier updated"
     else
       render "edit"
     end
   end
 
   def feature
-    @supplier = Supplier.find(params[:supplier_id])
+    @supplier = Spree::Supplier.find(params[:supplier_id])
     if @supplier.featured == true
       @supplier.featured = false
     else
@@ -71,7 +71,7 @@ class Admin::SuppliersController < Admin::BaseController
   end
 
   def line_items
-    @order = Order.find_by_number(params[:order_id])
+    @order = Spree::Order.find_by_number(params[:order_id])
   end
 
   def selected
@@ -82,7 +82,7 @@ class Admin::SuppliersController < Admin::BaseController
     if params[:q].blank?
       @available_suppliers = []
     else
-      @available_suppliers = Supplier.find(:all, :conditions => ['lower(name) LIKE ?', "%#{params[:q].downcase}%"])
+      @available_suppliers = Spree::Supplier.find(:all, :conditions => ['lower(name) LIKE ?', "%#{params[:q].downcase}%"])
     end
     @available_suppliers.delete_if { |supplier| @product.supplier == supplier }
     respond_to do |format|
@@ -100,7 +100,7 @@ class Admin::SuppliersController < Admin::BaseController
   end
 
   def select
-    @supplier = Supplier.find_by_param!(params[:id])
+    @supplier = Spree::Supplier.find_by_param!(params[:id])
     @product.supplier = @supplier
     @product.save
     @supplier = @product.supplier

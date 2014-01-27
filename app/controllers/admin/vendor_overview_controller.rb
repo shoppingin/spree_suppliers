@@ -1,4 +1,4 @@
-class Admin::VendorOverviewController < Spree::BaseController
+class Spree::Admin::VendorOverviewController < Spree::BaseController
   ssl_required
 
   helper :search
@@ -7,12 +7,12 @@ class Admin::VendorOverviewController < Spree::BaseController
 
   before_filter :vendor
 
-  def vendor 
-    if !current_user.has_role?("vendor")
+  def vendor
+    if !current_spree_user.has_spree_role?("vendor")
       unauthorized
     end
   end
-  def index 
-    
+  def index
+
   end
 end

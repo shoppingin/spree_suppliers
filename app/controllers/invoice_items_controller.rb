@@ -1,2 +1,2 @@
-class InvoiceItemsController < ApplicationController
+class Spree::InvoiceItemsController < Spree::ApplicationController
 end

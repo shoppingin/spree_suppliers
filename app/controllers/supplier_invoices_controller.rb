@@ -1,2 +1,2 @@
-class SupplierInvoicesController < ApplicationController
+class Spree::SupplierInvoicesController < ApplicationController
 end
