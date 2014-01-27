@@ -106,21 +106,21 @@ class Spree::Admin::SuppliersController < Spree::Admin::ResourceController
     render :layout => false
   end
 
+##
+#  update.response do |wants|
+#    wants.html { redirect_to collection_url }
+#  end
 
-  update.response do |wants|
-    wants.html { redirect_to collection_url }
-  end
+#  update.after do
+#    Rails.cache.delete('suppliers')
+#  end
 
-  update.after do
-    Rails.cache.delete('suppliers')
-  end
+ # create.response do |wants|
+ #  wants.html { redirect_to collection_url }
+# end
 
-  create.response do |wants|
-    wants.html { redirect_to collection_url }
-  end
-
-  create.after do
-    Rails.cache.delete('suppliers')
-  end
+ # create.after do
+ #   Rails.cache.delete('suppliers')
+ # end'''
 
 end
