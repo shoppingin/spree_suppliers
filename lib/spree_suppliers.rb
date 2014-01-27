@@ -19,9 +19,9 @@ module SpreeSuppliers
           load_order
           # optional fee that admin can charge to sell suppliers products for them
           @fee = 0.10
-          if current_user.has_role?("vendor")
+          if current_spree_user.has_spree_role?("vendor")
             @invoices = @order.spree_supplier_invoices
-            @invoices.select! {|s| s.supplier_id == current_user.supplier.id}
+            @invoices.select! {|s| s.supplier_id == current_spree_user.supplier.id}
           else
             @invoices = @order.spree_supplier_invoices
           end
@@ -51,8 +51,8 @@ module SpreeSuppliers
 
           @orders = Spree::Order.ransack(params[:search]).result.includes([:user, :shipments, :payments]).page(params[:page]).per(Spree::Config[:orders_per_page])
 
-          if current_spree_user.has_role?("vendor")
-            @orders.select! {|o| o.spree_supplier_invoices.select {|s| s.supplier_id == current_user.supplier.id}.size > 0}
+          if current_spree_user.has_spree_role?("vendor")
+            @orders.select! {|o| o.spree_supplier_invoices.select {|s| s.supplier_id == current_spree_user.supplier.id}.size > 0}
           end
           respond_with(@orders)
         end
@@ -118,8 +118,8 @@ module SpreeSuppliers
         end
 
         def load_index
-          if current_user.roles.member?(Spree::Role.find_by_name("vendor"))
-            @collection.select! {|c| c.supplier_id == current_user.supplier.id}
+          if current_spree_user.spree_roles.member?(Spree::Role.find_by_name("vendor"))
+            @collection.select! {|c| c.supplier_id == current_spree_user.supplier.id}
           end
         end
 
@@ -150,8 +150,8 @@ module SpreeSuppliers
         end
 
         def create_before
-          if current_user.has_role?("vendor")
-            @object = current_user.supplier.products.build(params[:product])
+          if current_spree_user.has_spree_role?("vendor")
+            @object = current_spree_user.supplier.products.build(params[:product])
           else
             @object = Spree::Product.new(params[:product])
           end
