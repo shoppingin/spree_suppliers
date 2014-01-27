@@ -34,7 +34,7 @@ module SpreeSuppliers
           @show_only_completed = params[:search][:completed_at_is_not_null].present?
           params[:search][:meta_sort] ||= @show_only_completed ? 'completed_at.desc' : 'created_at.desc'
 
-          @search = Order.metasearch(params[:search])
+          @search = Spree::Order.metasearch(params[:search])
 
           if !params[:search][:created_at_greater_than].blank?
             params[:search][:created_at_greater_than] = Time.zone.parse(params[:search][:created_at_greater_than]).beginning_of_day rescue ""
@@ -49,7 +49,7 @@ module SpreeSuppliers
             params[:search][:completed_at_less_than] = params[:search].delete(:created_at_less_than)
           end
 
-          @orders = Order.metasearch(params[:search]).includes([:user, :shipments, :payments]).page(params[:page]).per(Spree::Config[:orders_per_page])
+          @orders = Spree::Order.metasearch(params[:search]).includes([:user, :shipments, :payments]).page(params[:page]).per(Spree::Config[:orders_per_page])
 
           if current_user.has_role?("vendor")
             @orders.select! {|o| o.spree_supplier_invoices.select {|s| s.supplier_id == current_user.supplier.id}.size > 0}
@@ -98,7 +98,7 @@ module SpreeSuppliers
             :previous_state => 'cart',
             :next_state => 'complete',
             :name => 'order' ,
-            :user_id => (User.respond_to?(:current) && User.current.try(:id)) || self.user_id
+            :user_id => (Spree::User.respond_to?(:current) && Spree::User.current.try(:id)) || self.user_id
           })
         end
       end
@@ -114,18 +114,18 @@ module SpreeSuppliers
 
         def load
           @suppliers = Supplier.find(:all, :order => "name")
-          @options = Taxon.all
+          @options = Spree::Taxon.all
         end
 
         def load_index
-          if current_user.roles.member?(Role.find_by_name("vendor"))
+          if current_user.roles.member?(Spree::Role.find_by_name("vendor"))
             @collection.select! {|c| c.supplier_id == current_user.supplier.id}
           end
         end
 
         #indicate that we want to create a new product
         def new
-          @object = Product.new()
+          @object = Spree::Product.new()
           @status = true
           @suppliers = Supplier.all
         end
@@ -137,7 +137,7 @@ module SpreeSuppliers
 
         def taxon_push object
           object.taxons = []
-          Taxon.all.map {|m| object.taxons.push(Taxon.find_by_id(params[m.name])) if params.member?(m.name)}
+          Spree::Taxon.all.map {|m| object.taxons.push(Spree::Taxon.find_by_id(params[m.name])) if params.member?(m.name)}
           return object
         end
 
@@ -153,20 +153,20 @@ module SpreeSuppliers
           if current_user.has_role?("vendor")
             @object = current_user.supplier.products.build(params[:product])
           else
-            @object = Product.new(params[:product])
+            @object = Spree::Product.new(params[:product])
           end
           @object = taxon_push(@object)
         end
 
         def publish
-          p = Product.find_by_name(params[:id])
+          p = Spree::Product.find_by_name(params[:id])
           p.available_on = Date.today
           p.save
           redirect_to edit_admin_product_path(p)
         end
 
         def unpublish
-          p = Product.find_by_name(params[:id])
+          p = Spree::Product.find_by_name(params[:id])
           p.available_on = nil
           p.save
           redirect_to edit_admin_product_path(p)
