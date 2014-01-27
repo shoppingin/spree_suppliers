@@ -45,7 +45,7 @@ class Spree::Admin::TaxonsController < Spree::Admin::BaseController
   end
 
   def update_taxons
-    @supplier = Spree::Supplier.find params[:supplier_id]
+    @supplier = Supplier.find params[:supplier_id]
     @supplier.taxons = []
     @supplier.taxons.push(Spree::Taxon.all.select{|t| params[t.name.to_s] })
     @supplier.save
@@ -55,7 +55,7 @@ class Spree::Admin::TaxonsController < Spree::Admin::BaseController
   private
 
   def load_supplier
-    Spree::Supplier.find params[:supplier_id]
+    Supplier.find params[:supplier_id]
   end
 
 end
