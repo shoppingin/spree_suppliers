@@ -1,4 +1,4 @@
-class Spree::Admin::Spree::SuppliersController < Spree::Admin::BaseController
+class SuppliersController < Spree::Admin::BaseController
   resource_controller
   respond_to :html, :js
 
