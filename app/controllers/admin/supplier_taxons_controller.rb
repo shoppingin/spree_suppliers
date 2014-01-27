@@ -1,4 +1,4 @@
-class Spree::Admin::Spree::SupplierSpree::TaxonsController < Spree::Admin::BaseController
+class Spree::Admin::TaxonsController < Spree::Admin::BaseController
   include Railslove::Plugins::FindByParam::SingletonMethods
   helper "admin/taxons"
 
