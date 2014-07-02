@@ -1,4 +1,4 @@
-# Spree Suppliers Extension
+# Spree Suppliers Extension [![Code Climate](https://codeclimate.com/github/shoppingin/spree_suppliers.png)](https://codeclimate.com/github/shoppingin/spree_suppliers) [![Build Status](https://travis-ci.org/shoppingin/spree_suppliers.png?branch=master)](https://travis-ci.org/shoppingin/spree_suppliers)
 
 This is an extension to run on top of Spree 0.70.3 rails ecommerce engine.
 
