@@ -1,1 +1,10 @@
+*.gem
+*.swp
+.bundle
+.idea
+.DS_Store
+Gemfile.lock
+pkg/*
 spec/dummy
+coverage
+.rvmrc
